@@ -20,22 +20,29 @@ class AuthController extends Controller
                 'device_name' => 'sometimes|string|max:255'
             ]);
 
-            $user = User::where('email', $request->email)->first();
+            //authenticate using Lorma Access
+            $request->validate([
+                'password' => 'required|string',
+                'student_id' => 'required|String'
+            ]);
 
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'The provided credentials are incorrect.'
-                ], 401);
+            $student = new Student($request->student_id);
+
+            // check external API
+            if (! $student->authenticate($request->password)) {
+                return response()->json(['message' => 'Invalid credentials'], 401);
             }
 
-            $deviceName = $request->device_name ?? 'API Token';
-            $token = $user->createToken($deviceName)->plainTextToken;
+            // generate token (random string)
+            $token = bin2hex(random_bytes(32));
+
+            // store token in cache with 30days expiry
+            cache()->put("access_api_token:{$token}", $request->student_id, now()->addDays(30));
 
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'user' => $user,
+                    'studentId' => $student->studentId,
                     'token' => $token,
                     'token_type' => 'Bearer'
                 ]
