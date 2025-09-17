@@ -7,7 +7,7 @@ class Student
     protected AccessClient $client;
     protected string $studentId;
 
-    public function __construct(string $studentId, AccessClient $client = null)
+    public function __construct(string $studentId, ?AccessClient $client = null)
     {
         $this->studentId = $studentId;
         $this->client = $client ?? new AccessClient();
@@ -51,7 +51,7 @@ class Student
 
         $response = $this->client->sendRequest($request);
         
-        return isset($response['result']) && $response['result'] === 'PASS';
+        return isset($response['data']) && $response['data'] === 'PASS';
     }
 
     public function getCurriculum(): array

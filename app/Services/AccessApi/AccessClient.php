@@ -72,7 +72,7 @@ class AccessClient
 
     public function generateSid(): string
     {
-        return uniqid('', true);
+        return uniqid('ACCESSPLUS-', true);
     }
 
     public function generateSecurityHash(string $field, string $sid): string

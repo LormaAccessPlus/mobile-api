@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 // Authentication routes (public)
 Route::post('login', [AuthController::class, 'login']);
 
+
 // Protected routes
 Route::middleware('access.api')->group(function () {
     // Auth management
@@ -34,17 +35,3 @@ Route::prefix('access')->middleware(['access.api'])->group(function () {
     });
 });
 
-
-// UNPROTECTED ROUTES FOR TESTING
-// Route::prefix('access')->group(function () {
-//     Route::prefix('students/{studentId}')->group(function () {
-//         Route::get('info', [StudentController::class, 'getInfo']);
-//         Route::post('authenticate', [StudentController::class, 'authenticate']);
-//         Route::get('curriculum', [StudentController::class, 'getCurriculum']);
-//         Route::get('grades', [StudentController::class, 'getGrades']);
-//         Route::get('assessment', [StudentController::class, 'getAssessment']);
-//         Route::get('balance', [StudentController::class, 'getBalance']);
-//         Route::get('ledger-history', [StudentController::class, 'getLedgerHistory']);
-//         Route::post('assess', [StudentController::class, 'assess']);
-//     });
-// });

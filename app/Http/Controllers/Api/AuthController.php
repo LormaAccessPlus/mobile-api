@@ -8,18 +8,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Services\AccessApi\Student;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
         try {
-            $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
-                'device_name' => 'sometimes|string|max:255'
-            ]);
-
             //authenticate using Lorma Access
             $request->validate([
                 'password' => 'required|string',
@@ -30,7 +26,10 @@ class AuthController extends Controller
 
             // check external API
             if (! $student->authenticate($request->password)) {
-                return response()->json(['message' => 'Invalid credentials'], 401);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials'
+                ], 401);
             }
 
             // generate token (random string)
@@ -42,7 +41,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'studentId' => $student->studentId,
+                    'studentId' => $request->student_id,
                     'token' => $token,
                     'token_type' => 'Bearer'
                 ]
