@@ -19,10 +19,10 @@ class AuthController extends Controller
             //authenticate using Lorma Access
             $request->validate([
                 'password' => 'required|string',
-                'student_id' => 'required|String'
+                'studentId' => 'required|String'
             ]);
 
-            $student = new Student($request->student_id);
+            $student = new Student($request->studentId);
 
             // check external API
             if (! $student->authenticate($request->password)) {
@@ -36,12 +36,12 @@ class AuthController extends Controller
             $token = bin2hex(random_bytes(32));
 
             // store token in cache with 30days expiry
-            cache()->put("access_api_token:{$token}", $request->student_id, now()->addDays(30));
+            cache()->put("access_api_token:{$token}", $request->studentId, now()->addDays(30));
 
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'studentId' => $request->student_id,
+                    'studentId' => $request->studentId,
                     'token' => $token,
                     'token_type' => 'Bearer'
                 ]
