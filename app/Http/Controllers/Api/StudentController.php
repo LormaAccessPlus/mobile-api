@@ -88,11 +88,47 @@ class StudentController extends Controller
         }
     }
 
-    public function getGrades(string $studentId): JsonResponse
+    public function getGrades(Request $request, string $studentId): JsonResponse
     {
         try {
             $student = new Student($studentId);
-            $data = $student->getGrades();
+            $data = $student->getGrades($request->all());
+            
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (AccessApiException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getTermGrades(Request $request, string $studentId): JsonResponse
+    {
+        try {
+            $student = new Student($studentId);
+            $data = $student->getTermGrades($request->all());
+            
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (AccessApiException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getSchedule(Request $request, string $studentId): JsonResponse
+    {
+        try {
+            $student = new Student($studentId);
+            $data = $student->getSchedule($request->all());
             
             return response()->json([
                 'success' => true,

@@ -28,6 +28,8 @@ Route::prefix('access')->middleware(['access.api'])->group(function () {
         Route::post('authenticate', [StudentController::class, 'authenticate']);
         Route::get('curriculum', [StudentController::class, 'getCurriculum']);
         Route::get('grades', [StudentController::class, 'getGrades']);
+        Route::get('schedule', [StudentController::class, 'getSchedule']);
+        Route::get('term-grades', [StudentController::class, 'getTermGrades']);
         Route::get('assessment', [StudentController::class, 'getAssessment']);
         Route::get('balance', [StudentController::class, 'getBalance']);
         Route::get('ledger-history', [StudentController::class, 'getLedgerHistory']);

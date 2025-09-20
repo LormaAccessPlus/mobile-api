@@ -71,7 +71,7 @@ class Student
         return $this->client->sendRequest($request);
     }
 
-    public function getGrades(): array
+    public function getGrades(array $params = []): array
     {
         $sid = $this->client->generateSid();
         
@@ -84,6 +84,52 @@ class Student
             'studid' => $this->studentId,
             'sid' => $sid,
         ];
+
+        if (!empty($params)) {
+            $request['params'] = json_encode($params, JSON_FORCE_OBJECT);
+        }
+
+        return $this->client->sendRequest($request);
+    }
+
+    public function getSchedule(array $params = []): array
+    {
+        $sid = $this->client->generateSid();
+        
+        $request = [
+            'key' => $this->client->getConfig()['key'],
+            'action' => 'student',
+            'call' => 'enlistment',
+            'sec' => $this->client->generateSecurityHash($this->studentId, $sid),
+            'field' => 'studid',
+            'studid' => $this->studentId,
+            'sid' => $sid,
+        ];
+
+        if (!empty($params)) {
+            $request['params'] = json_encode($params, JSON_FORCE_OBJECT);
+        }
+
+        return $this->client->sendRequest($request);
+    }
+
+    public function getTermGrades(array $params = []): array
+    {
+        $sid = $this->client->generateSid();
+        
+        $request = [
+            'key' => $this->client->getConfig()['key'],
+            'action' => 'student',
+            'call' => 'termgrades',
+            'sec' => $this->client->generateSecurityHash($this->studentId, $sid),
+            'field' => 'studid',
+            'studid' => $this->studentId,
+            'sid' => $sid,
+        ];
+
+        if (!empty($params)) {
+            $request['params'] = json_encode($params, JSON_FORCE_OBJECT);
+        }
 
         return $this->client->sendRequest($request);
     }
