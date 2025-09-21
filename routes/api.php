@@ -35,5 +35,10 @@ Route::prefix('access')->middleware(['access.api'])->group(function () {
         Route::get('ledger-history', [StudentController::class, 'getLedgerHistory']);
         Route::post('assess', [StudentController::class, 'assess']);
     });
+
+    //For course
+    Route::prefix('courses/{courseId}')->group(function () {
+        Route::get('info', [StudentController::class, 'getCourse']);
+    });
 });
 

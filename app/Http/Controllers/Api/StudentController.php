@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\AccessApi\AccessApiException;
 use App\Services\AccessApi\Student;
+use App\Services\AccessApi\Course;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -188,6 +189,34 @@ class StudentController extends Controller
                 'success' => true,
                 'data' => $data
             ]);
+        } catch (AccessApiException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * This returns Course (BSIT, BSCS...) info
+     */
+    public function getCourse(string $courseId): JsonResponse
+    {
+        try {
+            $course = new Course($courseId);
+            
+            $data = $course->getInfo();
+            
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         } catch (AccessApiException $e) {
             return response()->json([
                 'success' => false,
